@@ -1,49 +1,64 @@
 package com.example.habittracker_semogaberuntung
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.habittracker_semogaberuntung.databinding.FragmentAddHabitBinding
 
 class AddHabitFragment : Fragment() {
+
+    private var _binding: FragmentAddHabitBinding? = null
+    private val binding get() = _binding!!
     private lateinit var viewModel: HabitViewModel
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAddHabitBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity())[HabitViewModel::class.java]
 
+        // Observer (opsional, cuma buat debug)
         viewModel.habitList.observe(viewLifecycleOwner) { list ->
-            println("Jumlah habit: ${list.size}")
+            println("Jumlah habit setelah tambah: ${list.size}")
         }
 
-        val etName = view.findViewById<EditText>(R.id.etName)
-        val etDesc = view.findViewById<EditText>(R.id.etDescription)
-        val etGoal = view.findViewById<EditText>(R.id.etGoal)
+        // Setup tombol save
+        binding.btnSave.setOnClickListener {
+            val name = binding.etName.text.toString().trim()
+            val desc = binding.etDescription.text.toString().trim()
+            val goal = binding.etGoal.text.toString().toIntOrNull() ?: 0
 
-        val btnSave = view.findViewById<Button>(R.id.btnSave)
-
-        btnSave.setOnClickListener {
-
-            val name = etName.text.toString()
-            val desc = etDesc.text.toString()
-            val goal = etGoal.text.toString().toIntOrNull() ?: 0
+            if (name.isEmpty() || goal <= 0) {
+                // Bisa tambah Toast error nanti
+                return@setOnClickListener
+            }
 
             val habit = Habit(
                 name = name,
                 description = desc,
                 goal = goal,
-                icon = R.drawable.ic_launcher_foreground
+                icon = R.drawable.ic_launcher_foreground  // nanti ganti dengan spinner
             )
 
             viewModel.addHabit(habit)
-
-            findNavController().popBackStack()
+            findNavController().popBackStack()  // balik ke Dashboard
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
