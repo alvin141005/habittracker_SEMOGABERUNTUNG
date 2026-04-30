@@ -14,4 +14,26 @@ class HabitViewModel : ViewModel() {
         currentList.add(habit)
         _habitList.value = currentList
     }
+
+    fun incrementProgress(position: Int) {
+        val currentList = _habitList.value ?: return
+        if (position in currentList.indices) {
+            val habit = currentList[position]
+            if (habit.progress < habit.goal) {
+                habit.progress++
+                _habitList.value = currentList  // trigger observer
+            }
+        }
+    }
+
+    fun decrementProgress(position: Int) {
+        val currentList = _habitList.value ?: return
+        if (position in currentList.indices) {
+            val habit = currentList[position]
+            if (habit.progress > 0) {
+                habit.progress--
+                _habitList.value = currentList
+            }
+        }
+    }
 }
