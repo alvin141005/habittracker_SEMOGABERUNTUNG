@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,41 +12,91 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add New Habit"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp"/>
-
-        <EditText
-            android:id="@+id/etName"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Habit Name" />
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
 
-        <EditText
-            android:id="@+id/etDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Description"
-            android:layout_marginTop="12dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-        <EditText
-            android:id="@+id/etGoal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Goal (e.g. 7 times)"
-            android:inputType="number"
-            android:layout_marginTop="12dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add a New Habit"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"/>
+
+                <EditText
+                    android:id="@+id/etName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Habit Name *"
+                    android:padding="10dp"/>
+
+                <EditText
+                    android:id="@+id/etDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Short Description *"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dp"/>
+
+                <EditText
+                    android:id="@+id/etGoal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Goal *"
+                    android:inputType="number"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Butuh berapa untuk menyelesaikan task ini?"
+                    android:textSize="12sp"
+                    android:textColor="#888888"
+                    android:layout_marginTop="4dp"/>
+
+                <EditText
+                    android:id="@+id/etUnit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Unit *"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contoh: gelas, menit, halamanan."
+                    android:textSize="12sp"
+                    android:textColor="#888888"
+                    android:layout_marginTop="4dp"/>
+
+                <Spinner
+                    android:id="@+id/spinnerIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <Button
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save Habit"
-            android:layout_marginTop="20dp" />
+            android:text="Create Habit"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#6A00F4"
+            android:layout_marginTop="16dp"/>
 
     </LinearLayout>
 </ScrollView>

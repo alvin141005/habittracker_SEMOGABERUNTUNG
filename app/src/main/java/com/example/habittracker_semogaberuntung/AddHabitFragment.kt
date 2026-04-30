@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.habittracker_semogaberuntung.databinding.FragmentAddHabitBinding
+import android.widget.ArrayAdapter
 
 class AddHabitFragment : Fragment() {
 
@@ -34,6 +35,20 @@ class AddHabitFragment : Fragment() {
             println("Jumlah habit setelah tambah: ${list.size}")
         }
 
+        val items = listOf("Fitness", "Minum", "Belajar")
+
+        val icons = listOf(
+            R.drawable.fitness,
+            R.drawable.drink,
+            R.drawable.study
+        )
+
+        binding.spinnerIcon.adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            items
+        )
+
         // Setup tombol save
         binding.btnSave.setOnClickListener {
             val name = binding.etName.text.toString().trim()
@@ -45,11 +60,13 @@ class AddHabitFragment : Fragment() {
                 return@setOnClickListener
             }
 
+            val selectedIcon = icons[binding.spinnerIcon.selectedItemPosition]
+
             val habit = Habit(
                 name = name,
                 description = desc,
                 goal = goal,
-                icon = R.drawable.ic_launcher_foreground  // nanti ganti dengan spinner
+                icon = selectedIcon
             )
 
             viewModel.addHabit(habit)
