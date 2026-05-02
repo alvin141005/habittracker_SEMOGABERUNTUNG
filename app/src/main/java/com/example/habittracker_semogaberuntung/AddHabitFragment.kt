@@ -34,7 +34,7 @@ class AddHabitFragment : Fragment() {
         viewModel.habitList.observe(viewLifecycleOwner) { list ->
             println("Jumlah habit setelah tambah: ${list.size}")
         }
-
+        // spinner buat item
         val items = listOf("Fitness", "Minum", "Belajar")
 
         val icons = listOf(
@@ -49,11 +49,21 @@ class AddHabitFragment : Fragment() {
             items
         )
 
+        // spinner buat unit (gatau boleh gak)
+        //val unitItems = listOf("menit", "gelas", "halaman")
+
+        //binding.spinnerUnit.adapter = ArrayAdapter(
+        //    requireContext(),
+        //    android.R.layout.simple_spinner_dropdown_item,
+        //    unitItems
+        //)
+
         // Setup tombol save
         binding.btnSave.setOnClickListener {
             val name = binding.etName.text.toString().trim()
             val desc = binding.etDescription.text.toString().trim()
             val goal = binding.etGoal.text.toString().toIntOrNull() ?: 0
+            val unit = binding.etUnit.text.toString().trim()
 
             if (name.isEmpty() || goal <= 0) {
                 // Bisa tambah Toast error nanti
@@ -66,7 +76,8 @@ class AddHabitFragment : Fragment() {
                 name = name,
                 description = desc,
                 goal = goal,
-                icon = selectedIcon
+                icon = selectedIcon,
+                unit = unit
             )
 
             viewModel.addHabit(habit)

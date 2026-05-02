@@ -19,7 +19,7 @@ class HabitAdapter(
                 tvHabitName.text = habit.name
                 tvDescription.text = habit.description
 
-                val progressText = "${habit.progress} / ${habit.goal}"
+                val progressText = "Progress : ${habit.progress} / ${habit.goal} ${habit.unit}"
                 tvProgress.text = progressText
 
                 progressBar.max = habit.goal
