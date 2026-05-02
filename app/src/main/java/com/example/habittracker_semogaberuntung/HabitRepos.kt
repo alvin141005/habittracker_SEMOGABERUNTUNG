@@ -11,6 +11,7 @@ object HabitRepository {
 
     private var habitList: MutableList<Habit> = mutableListOf()
 
+    // load data
     fun loadData(context: Context) {
         try {
             val file = context.openFileInput(FILE_NAME)
@@ -24,18 +25,22 @@ object HabitRepository {
         }
     }
 
+    // ambil habit
     fun getHabits(): List<Habit> = habitList
 
+    // tambah habit  sama nyimpan ke json
     fun addHabit(context: Context, habit: Habit) {
         habitList.add(habit)
         saveData(context)
     }
 
+    // update habit sama nyimpan ke json
     fun updateHabit(context: Context, index: Int, habit: Habit) {
         habitList[index] = habit
         saveData(context)
     }
 
+    // save data
     private fun saveData(context: Context) {
         val json = gson.toJson(habitList)
         context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use {
