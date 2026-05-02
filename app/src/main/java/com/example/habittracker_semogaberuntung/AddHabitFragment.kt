@@ -80,7 +80,7 @@ class AddHabitFragment : Fragment() {
                 unit = unit
             )
 
-            viewModel.addHabit(habit)
+            viewModel.addHabit(requireContext(), habit)
             findNavController().popBackStack()  // balik ke Dashboard
         }
     }

@@ -30,6 +30,8 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity())[HabitViewModel::class.java]
+        //load json
+        viewModel.loadHabits(requireContext())
 
         setupRecyclerView()
         setupObservers()
@@ -40,8 +42,8 @@ class DashboardFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         adapter = HabitAdapter(
             habits = emptyList(),
-            onIncrement = { pos -> viewModel.incrementProgress(pos) },
-            onDecrement = { pos -> viewModel.decrementProgress(pos) }
+            onIncrement = { pos -> viewModel.incrementProgress(requireContext(), pos) },
+            onDecrement = { pos -> viewModel.decrementProgress(requireContext(), pos) }
         )
         binding.recyclerView.adapter = adapter
     }

@@ -1,38 +1,48 @@
 package com.example.habittracker_semogaberuntung
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class HabitViewModel : ViewModel() {
 
-    private val _habitList = MutableLiveData<MutableList<Habit>>(mutableListOf())
-    val habitList: LiveData<MutableList<Habit>> = _habitList
+    // ambil data
+    private val _habitList = MutableLiveData<List<Habit>>()
+    val habitList: LiveData<List<Habit>> = _habitList
 
-    fun addHabit(habit: Habit) {
-        val currentList = _habitList.value ?: mutableListOf()
-        currentList.add(habit)
-        _habitList.value = currentList
+    fun loadHabits(context: Context) {
+        HabitRepository.loadData(context)
+        _habitList.value = HabitRepository.getHabits()
     }
 
-    fun incrementProgress(position: Int) {
-        val currentList = _habitList.value ?: return
+    fun addHabit(context: Context, habit: Habit) {
+        HabitRepository.addHabit(context, habit)
+        _habitList.value = HabitRepository.getHabits()
+    }
+
+    fun incrementProgress(context: Context, position: Int) {
+        val currentList = HabitRepository.getHabits().toMutableList()
+
         if (position in currentList.indices) {
             val habit = currentList[position]
             if (habit.progress < habit.goal) {
                 habit.progress++
-                _habitList.value = currentList  // trigger observer
+                HabitRepository.updateHabit(context, position, habit)
+                _habitList.value = HabitRepository.getHabits()
             }
         }
     }
 
-    fun decrementProgress(position: Int) {
-        val currentList = _habitList.value ?: return
+    fun decrementProgress(context: Context, position: Int) {
+        val currentList = HabitRepository.getHabits().toMutableList()
+
         if (position in currentList.indices) {
             val habit = currentList[position]
             if (habit.progress > 0) {
                 habit.progress--
-                _habitList.value = currentList
+                HabitRepository.updateHabit(context, position, habit)
+                _habitList.value = HabitRepository.getHabits()
             }
         }
     }
