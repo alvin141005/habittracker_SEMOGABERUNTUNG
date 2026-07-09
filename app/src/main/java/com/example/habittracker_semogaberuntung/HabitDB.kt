@@ -6,13 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [User::class],
-    version = 1,
+    entities = [User::class, Habit::class],
+    version = 2,
     exportSchema = false
 )
 abstract class HabitDB : RoomDatabase() {
 
     abstract fun userDao(): UserDao
+    abstract fun habitDao(): HabitDao
 
     companion object {
 
@@ -26,7 +27,11 @@ abstract class HabitDB : RoomDatabase() {
                     context.applicationContext,
                     HabitDB::class.java,
                     "habit_db"
-                ).build()
+                )
+                    // versi lama cuma punya tabel user, sekarang nambah tabel habit
+                    // fallbackToDestructiveMigration cukup buat tugas kuliah (data lama di-reset)
+                    .fallbackToDestructiveMigration()
+                    .build()
             }
 
             return INSTANCE!!

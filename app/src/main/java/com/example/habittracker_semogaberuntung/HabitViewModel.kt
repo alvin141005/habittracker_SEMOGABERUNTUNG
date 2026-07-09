@@ -1,48 +1,65 @@
 package com.example.habittracker_semogaberuntung
 
-import android.content.Context
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
-class HabitViewModel : ViewModel() {
+class HabitViewModel(application: Application) : AndroidViewModel(application) {
 
-    // ambil data
+    private val db = HabitDB.buildDatabase(application)
+
     private val _habitList = MutableLiveData<List<Habit>>()
     val habitList: LiveData<List<Habit>> = _habitList
 
-    fun loadHabits(context: Context) {
-        HabitRepository.loadData(context)
-        _habitList.value = HabitRepository.getHabits()
+    // ambil semua habit dari tabel habit (room)
+    fun loadHabits() {
+        viewModelScope.launch {
+            _habitList.value = db.habitDao().getAll()
+        }
     }
 
-    fun addHabit(context: Context, habit: Habit) {
-        HabitRepository.addHabit(context, habit)
-        _habitList.value = HabitRepository.getHabits()
+    // dipakai halaman New Habit
+    fun addHabit(habit: Habit) {
+        viewModelScope.launch {
+            db.habitDao().insert(habit)
+            loadHabits()
+        }
     }
 
-    fun incrementProgress(context: Context, position: Int) {
-        val currentList = HabitRepository.getHabits().toMutableList()
+    // dipakai halaman Edit Habit (submit -> update ke tabel habit)
+    fun updateHabit(habit: Habit) {
+        viewModelScope.launch {
+            db.habitDao().update(habit)
+            loadHabits()
+        }
+    }
 
-        if (position in currentList.indices) {
-            val habit = currentList[position]
+    // dipakai halaman Edit Habit buat ambil data awal berdasarkan id
+    fun getHabitById(id: Int, callback: (Habit?) -> Unit) {
+        viewModelScope.launch {
+            callback(db.habitDao().getById(id))
+        }
+    }
+
+    fun incrementProgress(habit: Habit) {
+        viewModelScope.launch {
             if (habit.progress < habit.goal) {
                 habit.progress++
-                HabitRepository.updateHabit(context, position, habit)
-                _habitList.value = HabitRepository.getHabits()
+                db.habitDao().update(habit)
+                loadHabits()
             }
         }
     }
 
-    fun decrementProgress(context: Context, position: Int) {
-        val currentList = HabitRepository.getHabits().toMutableList()
-
-        if (position in currentList.indices) {
-            val habit = currentList[position]
+    fun decrementProgress(habit: Habit) {
+        viewModelScope.launch {
             if (habit.progress > 0) {
                 habit.progress--
-                HabitRepository.updateHabit(context, position, habit)
-                _habitList.value = HabitRepository.getHabits()
+                db.habitDao().update(habit)
+                loadHabits()
             }
         }
     }

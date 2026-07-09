@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.habittracker_semogaberuntung.databinding.FragmentLoginBinding
 
-class LoginFragment : Fragment(R.layout.fragment_login) {
+class   LoginFragment : Fragment(R.layout.fragment_login) {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var viewModel: LoginViewModel

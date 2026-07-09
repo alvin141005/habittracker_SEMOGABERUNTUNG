@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.habittracker_semogaberuntung.databinding.FragmentDashboardBinding
 
-class DashboardFragment : Fragment() {
+class DashboardFragment : Fragment(), HabitAdapter.OnHabitActionListener {
 
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
@@ -30,8 +30,8 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity())[HabitViewModel::class.java]
-        //load json
-        viewModel.loadHabits(requireContext())
+        // fetch dari tabel habit (room)
+        viewModel.loadHabits()
 
         setupRecyclerView()
         setupObservers()
@@ -40,11 +40,9 @@ class DashboardFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = HabitAdapter(
-            habits = emptyList(),
-            onIncrement = { pos -> viewModel.incrementProgress(requireContext(), pos) },
-            onDecrement = { pos -> viewModel.decrementProgress(requireContext(), pos) }
-        )
+        // FAB gak perlu data binding, jadi listener biasa aja disini sudah cukup.
+        // Untuk tiap kartu (item_habit.xml), yang dipakai adalah listener binding lewat "listener" ini
+        adapter = HabitAdapter(habits = emptyList(), listener = this)
         binding.recyclerView.adapter = adapter
     }
 
@@ -65,6 +63,24 @@ class DashboardFragment : Fragment() {
         binding.fabAdd.setOnClickListener {
             findNavController().navigate(R.id.action_dashboard_to_addHabit)
         }
+    }
+
+    // dipanggil lewat listener binding dari tombol + di item_habit.xml
+    override fun onIncrement(habit: Habit) {
+        viewModel.incrementProgress(habit)
+    }
+
+    // dipanggil lewat listener binding dari tombol - di item_habit.xml
+    override fun onDecrement(habit: Habit) {
+        viewModel.decrementProgress(habit)
+    }
+
+    // (BARU) judul habit ditekan -> pindah ke Edit Habit, kirim id habit-nya
+    override fun onTitleClick(habit: Habit) {
+        val bundle = Bundle().apply {
+            putInt("habitId", habit.id)
+        }
+        findNavController().navigate(R.id.action_dashboard_to_editHabit, bundle)
     }
 
     override fun onDestroyView() {

@@ -49,15 +49,6 @@ class AddHabitFragment : Fragment() {
             items
         )
 
-        // spinner buat unit (gatau boleh gak)
-        //val unitItems = listOf("menit", "gelas", "halaman")
-
-        //binding.spinnerUnit.adapter = ArrayAdapter(
-        //    requireContext(),
-        //    android.R.layout.simple_spinner_dropdown_item,
-        //    unitItems
-        //)
-
         // Setup tombol save
         binding.btnSave.setOnClickListener {
             val name = binding.etName.text.toString().trim()
@@ -80,7 +71,8 @@ class AddHabitFragment : Fragment() {
                 unit = unit
             )
 
-            viewModel.addHabit(requireContext(), habit)
+            // simpan ke tabel habit (room), bukan JSON lagi
+            viewModel.addHabit(habit)
             findNavController().popBackStack()  // balik ke Dashboard
         }
     }
