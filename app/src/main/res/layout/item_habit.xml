@@ -129,6 +129,8 @@
                 android:textColor="@android:color/white"
                 android:backgroundTint="@color/design_default_color_error"
                 android:onClick="@{() -> listener.onDecrement(habit)}"
+                android:enabled="@{habit.progress &lt; habit.goal}"
+                android:alpha="@{habit.progress >= habit.goal ? 0.5f : 1f}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/progressBar"
                 android:layout_marginTop="14dp" />
@@ -149,6 +151,8 @@
                 android:textColor="@android:color/white"
                 android:backgroundTint="@color/design_default_color_primary"
                 android:onClick="@{() -> listener.onIncrement(habit)}"
+                android:enabled="@{habit.progress &lt; habit.goal}"
+                android:alpha="@{habit.progress >= habit.goal ? 0.5f : 1f}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/progressBar"
                 android:layout_marginTop="14dp" />
