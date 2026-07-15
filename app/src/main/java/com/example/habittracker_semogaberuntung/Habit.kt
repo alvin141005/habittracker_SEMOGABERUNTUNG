@@ -1,10 +1,30 @@
 package com.example.habittracker_semogaberuntung
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "habit")
 data class Habit(
-    val name: String,
-    val description: String,
-    val goal: Int,
+
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+
+    @ColumnInfo(name = "name")
+    var name: String,
+
+    @ColumnInfo(name = "description")
+    var description: String,
+
+    @ColumnInfo(name = "goal")
+    var goal: Int,
+
+    @ColumnInfo(name = "progress")
     var progress: Int = 0,
-    val icon: Int,
-    val unit: String
+
+    @ColumnInfo(name = "icon")
+    var icon: Int,
+
+    @ColumnInfo(name = "unit")
+    var unit: String
 )

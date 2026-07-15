@@ -2,42 +2,28 @@ package com.example.habittracker_semogaberuntung
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habittracker_semogaberuntung.databinding.ItemHabitBinding
 
 class HabitAdapter(
     private var habits: List<Habit>,
-    private val onIncrement: (Int) -> Unit,
-    private val onDecrement: (Int) -> Unit
+    private val listener: OnHabitActionListener
 ) : RecyclerView.Adapter<HabitAdapter.HabitViewHolder>() {
 
-    inner class HabitViewHolder(private val binding: ItemHabitBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(habit: Habit, position: Int) {
-            binding.apply {
-                ivIcon.setImageResource(habit.icon)
-                tvHabitName.text = habit.name
-                tvDescription.text = habit.description
+    // dipanggil dari item_habit.xml lewat listener binding
+    interface OnHabitActionListener {
+        fun onIncrement(habit: Habit)
+        fun onDecrement(habit: Habit)
+        fun onTitleClick(habit: Habit)
+    }
 
-                val progressText = "Progress : ${habit.progress} / ${habit.goal} ${habit.unit}"
-                tvProgress.text = progressText
+    inner class HabitViewHolder(private val binding: ItemHabitBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-                progressBar.max = habit.goal
-                progressBar.progress = habit.progress
-
-                if (habit.progress >= habit.goal) {
-                    tvStatus.text = "Completed"
-                    tvStatus.setTextColor(ContextCompat.getColor(root.context, android.R.color.holo_green_dark))
-                    cardHabit.strokeColor = ContextCompat.getColor(root.context, android.R.color.holo_green_dark)
-                } else {
-                    tvStatus.text = "In Progress"
-                    tvStatus.setTextColor(ContextCompat.getColor(root.context, android.R.color.darker_gray))
-                    cardHabit.strokeColor = ContextCompat.getColor(root.context, android.R.color.darker_gray)
-                }
-
-                btnPlus.setOnClickListener { onIncrement(position) }
-                btnMinus.setOnClickListener { onDecrement(position) }
-            }
+        fun bind(habit: Habit) {
+            binding.habit = habit
+            binding.listener = listener
+            binding.executePendingBindings()
         }
     }
 
@@ -47,7 +33,7 @@ class HabitAdapter(
     }
 
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
-        holder.bind(habits[position], position)
+        holder.bind(habits[position])
     }
 
     override fun getItemCount() = habits.size
